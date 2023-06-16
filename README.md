@@ -11,3 +11,7 @@
 * 界面使用[WPF-UI](https://github.com/lepoco/wpfui)样式
 
 ### 截图
+
+![截图1](https://github.com/JamesBaiJun/OpenAI-Azure/blob/master/images/1.png?raw=true)
+![截图2](https://github.com/JamesBaiJun/OpenAI-Azure/blob/master/images/2.png?raw=true)
+
