@@ -1,0 +1,143 @@
+﻿<ui:UiWindow x:Class="GPTChat.MainWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:GPTChat"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d"
+             xmlns:vm="clr-namespace:GPTChat.ViewModels"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             ExtendsContentIntoTitleBar="True"
+             WindowBackdropType="None"
+             WindowCornerPreference="Round"
+             WindowStartupLocation="CenterScreen"
+             FontFamily="{StaticResource ZiYuan}"
+             Title="MainWindow" Height="760" Width="900" DataContext="{dxmvvm:ViewModelSource Type=vm:MainViewModel}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.ColumnSpan="2">
+            <ui:TitleBar ShowMaximize="False" Background="Transparent">
+                <ui:TitleBar.Header>
+                    <StackPanel Orientation="Horizontal" Margin="8,0">
+                        <TextBlock Text="Chat Test" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ui:TitleBar.Header>
+            </ui:TitleBar>
+        </Grid>
+
+        <Grid Grid.Row="1" ClipToBounds="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="120"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="1" ClipToBounds="True" BorderThickness="1" BorderBrush="#63808080" Margin="8 8 8 4" CornerRadius="4">
+                <ScrollViewer ClipToBounds="True" x:Name="scroll" Margin="4" >
+                    <StackPanel>
+                        <ItemsControl ItemsSource="{Binding MessageItems}" Margin="4">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Role}" Value="Assistant">
+                                                        <Setter Property="Margin" Value="0 0 100 12"/>
+                                                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Role}" Value="User">
+                                                        <Setter Property="Margin" Value="100 0 0 12"/>
+                                                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Role}" Value="System">
+                                                        <Setter Property="Margin" Value="100 0 0 12"/>
+                                                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBox Text="{Binding Content,Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBox TextWrapping="Wrap" Text="{Binding ResponsePartial}" Opacity=".8" Visibility="{Binding IsWaitting,Converter={dxmvvm:BooleanToVisibilityConverter}}"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <StackPanel Grid.Row="2" Margin="8 0" Visibility="{Binding IsWaitting,Converter={dxmvvm:BooleanToVisibilityConverter}}">
+                <ProgressBar Height="12" IsIndeterminate="True"/>
+            </StackPanel>
+
+            <Grid Grid.Row="3" Margin="8 4 8 8">
+                <TextBox x:Name="txt" IsReadOnly="{DXBinding 'IsWaitting'}" Padding="8 8 52 8" Text="{Binding InputMessage,UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalAlignment="Stretch">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:KeyToCommand KeyGesture="Enter" Command="{Binding SendMessageCommand}"/>
+                    </dxmvvm:Interaction.Behaviors>
+                </TextBox>
+                <ToggleButton HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8" Height="32" IsChecked="{Binding IsVocieInputting}">
+                    <ui:SymbolIcon Symbol="SlideMicrophone32"/>
+                </ToggleButton>
+            </Grid>
+
+            <DockPanel Grid.Row="4" Margin="8 0 8 8" LastChildFill="False">
+                <ToggleButton Content="系统" Width="80" IsChecked="{Binding IsSystem}" ToolTip="以System身份发送"/>
+
+                <ToggleButton x:Name="showSet" DockPanel.Dock="Right" ToolTip="显示设置">
+                    <ui:SymbolIcon Symbol="Settings16" />
+                </ToggleButton>
+
+                <ToggleButton x:Name="scrollSet" DockPanel.Dock="Right" IsChecked="True" Margin="0 0 8 0" ToolTip="启用自动滚动">
+                    <ui:SymbolIcon Symbol="DualScreenVerticalScroll20"/>
+                </ToggleButton>
+
+                <ToggleButton x:Name="speech" DockPanel.Dock="Right" IsChecked="{Binding VoiceIsEnable}" Margin="0 0 8 0" ToolTip="启用朗读">
+                    <ui:SymbolIcon Symbol="PersonVoice20"/>
+                </ToggleButton>
+            </DockPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="1" Width="280" Visibility="{Binding ElementName=showSet,Path=IsChecked,Converter={dxmvvm:BooleanToVisibilityConverter}}">
+            <StackPanel Margin="0 8 8 8">
+                <TextBlock Text="主题：" Margin="4 0 0 0"/>
+                <ComboBox x:Name="themeComb" SelectedIndex="0" SelectionChanged="themeComb_SelectionChanged">
+                    <ComboBoxItem>Light</ComboBoxItem>
+                    <ComboBoxItem>Dark</ComboBoxItem>
+                </ComboBox>
+
+                <ui:CardExpander Header="API配置" Margin="0 8 0 0" IsExpanded="True">
+                    <StackPanel>
+                        <TextBlock Text="OpenAI秘钥：" Margin="4 0 0 0"/>
+                        <ui:PasswordBox Icon="Key16" Password="{Binding OpenAIKey,Mode=TwoWay}" ClearButtonEnabled="False" TextWrapping="Wrap"/>
+
+                        <TextBlock Text="Azure秘钥：" Margin="4 16 0 0"/>
+                        <ui:PasswordBox Icon="Key16" Password="{Binding AzureKey,Mode=TwoWay}" ClearButtonEnabled="False" TextWrapping="Wrap"/>
+
+                        <TextBlock Text="Azure语音区域：" Margin="4 16 0 0"/>
+                        <ui:TextBox Icon="Earth16" Text="{Binding AzureRegion,Mode=TwoWay}" TextWrapping="Wrap"/>
+
+                        <TextBlock Text="声音：" Margin="4 16 0 0"/>
+                        <ComboBox x:Name="voice" ItemsSource="{Binding VoiceNameList}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedVoiceName}">
+                        </ComboBox>
+
+                        <ui:Button Icon="CheckmarkCircle48" Command="{Binding ApplyCommand}" Appearance="Primary" Margin="0 16 0 0" Content="应用" HorizontalAlignment="Right" Width="100"/>
+                    </StackPanel>
+                </ui:CardExpander>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</ui:UiWindow>

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GPTChat", "GPTChat\GPTChat.csproj", "{6E6451C1-6584-47CA-9F45-3FAA164744FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E6451C1-6584-47CA-9F45-3FAA164744FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E6451C1-6584-47CA-9F45-3FAA164744FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E6451C1-6584-47CA-9F45-3FAA164744FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E6451C1-6584-47CA-9F45-3FAA164744FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CF4D4C0A-4FAA-49AE-BF0B-01401FB15055}
+	EndGlobalSection
+EndGlobal
